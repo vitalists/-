@@ -147,3 +147,85 @@ public class SparseArr {
 
 ```
 
+## 3 队列
+## 3.1 介绍
+1. 队列是一个**有序列表**，可以用**数组**和**链表**实现
+
+2. 遵循先入先出原则。
+
+   <img src="E:\WorsSpace\Data-structures-and-algorithms\imgs\队列.jpg" alt="队列" style="zoom: 50%;" />
+
+## 3.2队列的实现
+
+### 3.2.1数组模拟队列的实现
+
+1. maxSize：队列的最大容量。
+
+2. front：队列的头部索引,随着数据的输出而改变。
+
+3. rear：队列的尾部索引随着数据的输入而改变。
+
+   <img src="E:\WorsSpace\Data-structures-and-algorithms\imgs\数组模拟队列1.png" alt="数组模拟队列" style="zoom: 67%;" />
+
+#### a) 数据存入队列
+
+##### 思路分析
+
+1. 数组为空：front == rear
+2. 数据加入队中：rear +1
+3. 数据存满：rear == maxSize-1(最大下坐标)  
+
+##### 代码实现
+
+###### 初始化
+
+因为数组下标是从0开始，所以队列初始化时front和rear == -1 表示空。
+
+front == 0 表示第一个元素。
+
+<img src="E:\WorsSpace\Data-structures-and-algorithms\imgs\数组队列初始化.png" alt="数组队列初始化" style="zoom:67%;" />
+
+```java
+public class ArrQueueDemo {
+    private int[] array;
+    // 最大容量
+    private int maxSize;
+    //队列头位置
+    private int front;
+    //队列尾位置
+    private int rear;
+
+    // 初始化数组
+    public ArrQueueDemo(int maxSize) {
+        this.maxSize = maxSize;
+        this.front = -1;
+        this.rear = -1;
+    }
+    
+    // 判断队列为空：front = rear
+    public boolean isEmpty() {
+        return front == rear;
+    }
+
+    // 判断是否已经满rear 等于最大索引
+    public boolean isFull() {
+        return rear == maxSize - 1;
+    }
+
+
+}
+```
+
+###### 添加
+
+![](E:\WorsSpace\Data-structures-and-algorithms\imgs\数组队列添加数值.png)
+
+```java
+
+```
+
+
+
+###### 取值
+
+![](E:\WorsSpace\Data-structures-and-algorithms\imgs\数组队列取值.png)
