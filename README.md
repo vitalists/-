@@ -200,6 +200,7 @@ public class ArrQueueDemo {
         this.maxSize = maxSize;
         this.front = -1;
         this.rear = -1;
+        array = new int[maxSize];
     }
     
     // 判断队列为空：front = rear
@@ -221,7 +222,15 @@ public class ArrQueueDemo {
 ![](E:\WorsSpace\Data-structures-and-algorithms\imgs\数组队列添加数值.png)
 
 ```java
-
+   // 添加值
+    public void add(int num) {
+        //1.先判断数组是否已经满
+        boolean full = isFull();
+        if (full) {
+            throw new RuntimeException("数组已经满了");
+        }
+        array[++rear] = num;
+    }
 ```
 
 
@@ -229,3 +238,99 @@ public class ArrQueueDemo {
 ###### 取值
 
 ![](E:\WorsSpace\Data-structures-and-algorithms\imgs\数组队列取值.png)
+
+```java
+    // 取出值
+    public int get() {
+        // 1.先判断数组是否为空
+        if (isEmpty()) {
+            throw new RuntimeException("数组为空");
+        }
+        front++;
+        return array[front];
+    }
+```
+
+###### code
+
+```java
+import java.security.PrivateKey;
+
+public class ArrQueueDemo {
+    private int[] array;
+    // 最大容量
+    private int maxSize;
+    //队列头位置
+    private int front;
+    //队列尾位置
+    private int rear;
+
+    // 初始化数组
+    public ArrQueueDemo(int maxSize) {
+        this.maxSize = maxSize;
+        this.front = -1;
+        this.rear = -1;
+        array = new int[maxSize];
+    }
+
+
+    // 添加值
+    public void add(int num) {
+        //1.先判断数组是否已经满
+        boolean full = isFull();
+        if (full) {
+            throw new RuntimeException("数组已经满了");
+        }
+        array[++rear] = num;
+    }
+
+    // 取出值
+    public int get() {
+        // 1.先判断数组是否为空
+        if (isEmpty()) {
+            throw new RuntimeException("数组为空");
+        }
+        front++;
+        return array[front];
+    }
+
+    // 判断队列为空：front = rear
+    public boolean isEmpty() {
+        return front == rear;
+    }
+
+    // 判断是否已经满rear 等于最大索引
+    public boolean isFull() {
+        return rear == maxSize - 1;
+    }
+
+    public void show() {
+        for (int i = front + 1; i <= rear; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        ArrQueueDemo arrQueueDemo = new ArrQueueDemo(3);
+        System.out.println("加入第一个值");
+        arrQueueDemo.add(1);
+        arrQueueDemo.show();
+        System.out.println("加入第二个值");
+        arrQueueDemo.add(2);
+        arrQueueDemo.show();
+        System.out.println("加入第三个值");
+        arrQueueDemo.add(3);
+        arrQueueDemo.show();
+
+        System.out.println("取出第一个值" + arrQueueDemo.get());
+        arrQueueDemo.show();
+        System.out.println("取出第二个值" + arrQueueDemo.get());
+        arrQueueDemo.show();
+        System.out.println("取出第三个值" + arrQueueDemo.get());
+        arrQueueDemo.show();
+    }
+}
+
+```
+
