@@ -157,7 +157,7 @@ public class SparseArr {
 
 ## 3.2队列的实现
 
-### 3.2.1数组模拟队列的实现
+### 3.2.1数组模拟队列
 
 1. maxSize：队列的最大容量。
 
@@ -167,7 +167,7 @@ public class SparseArr {
 
    <img src="E:\WorsSpace\Data-structures-and-algorithms\imgs\数组模拟队列1.png" alt="数组模拟队列" style="zoom: 67%;" />
 
-#### a) 数据存入队列
+#### a) 模拟单向队列
 
 ##### 思路分析
 
@@ -329,6 +329,95 @@ public class ArrQueueDemo {
         arrQueueDemo.show();
         System.out.println("取出第三个值" + arrQueueDemo.get());
         arrQueueDemo.show();
+    }
+}
+
+```
+
+##### b）环形数组
+
+1. 环形队列中用初始化时front = 0 ，rear = 0
+
+2. 单向队列中rear从maxSize - 1的最大索引移动到 0位置就形成了环形队列
+
+3. 因为时环形队列不断重复用数组。所以rear值会超出maxSize，rear映射到数组的角标需要经过转化。
+
+4. rear % maxSize，front % maxSize 是数组的真正尾部角标。
+
+5. (rear + 1 % maxSize ) = front 表示队列已满。此时数组留出了一个空余空间。
+
+6. front = rear 表示队列为空
+
+7. 画一个圆形数组分分 分情况讨论可以得到上面的公式。
+
+   
+
+![](E:\WorsSpace\Data-structures-and-algorithms\imgs\环形队列.png)
+
+###### 代码实现
+
+```java
+public class CircleQueue {
+    private int[] array;
+    // 最大容量
+    private int maxSize;
+    //队列头位置
+    private int front;
+    //队列尾位置
+    private int rear;
+
+    public CircleQueue(int maxSize) {
+        this.maxSize = maxSize;
+        array = new int[maxSize];
+        front = 0;
+        rear = 0;
+    }
+
+
+    public boolean isEmpty() {
+        return front == rear;
+    }
+
+    public boolean isFull() {
+        return (rear + 1) % maxSize == front;
+    }
+
+    public void add( int num) {
+        if (isFull()) {
+            throw new RuntimeException("队列已经满了");
+        }
+        array[rear % maxSize] = num;
+        rear++;
+    }
+
+    public int get() {
+        if (isEmpty()) {
+            throw new RuntimeException("队列为空");
+        }
+        return array[front++ % maxSize];
+    }
+
+    public void show() {
+        for (int i = 0; i < rear ; i++) {
+            System.out.print(array[i] + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        CircleQueue circleQueue = new CircleQueue(5);
+        circleQueue.add(1);
+        circleQueue.add(2);
+        circleQueue.add(3);
+        circleQueue.add(4);
+        circleQueue.show();
+        // 取出队列
+        System.out.println();
+        System.out.println("======================");
+        System.out.println( circleQueue.get());
+        System.out.println( circleQueue.get());
+        System.out.println( circleQueue.get());
+        System.out.println( circleQueue.get());
+        System.out.println( circleQueue.get());
     }
 }
 
