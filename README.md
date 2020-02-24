@@ -423,3 +423,233 @@ public class CircleQueue {
 
 ```
 
+## 3.3 链表
+
+线性表根据存储结构可以分为顺序存储结构，和链式存储结构，**链表是链式存储结构的线性表**，链表的存储单元是连续的也可以是非连续的，因此为了表示当前数据元素与与直接后继元素的逻辑关系，对数据二元除了存储信息还要存储直接指示其后续节点的信息。
+
+
+
+![](./imgs/线性表.png)
+
+​																				     线性表
+
+​		
+
+
+
+​																						单链表逻辑结构
+
+​							
+
+### 3.3.1 单链表
+
+![](./imgs/链表.png)
+
+​																单链表的逻辑结构图
+
+##### 特点
+
+1. 单链表每个节点出来有数据信息外还有下一个节点的位置信息。
+2. 头节点不存数据只起指示数据的头部位置。
+3. 尾节点的数据下一个节点指示部分为空。
+
+##### 节点代码
+
+```java
+    //节点
+    class Node<T> {
+        private T data;
+
+        private Node next;
+
+        public Node(T data, Node next) {
+            this.data = data;
+            this.next = next;
+        }
+
+        public Node(T data) {
+            this.data = data;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public void setData(T data) {
+            this.data = data;
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+    }
+```
+
+##### 插入
+
+```java
+    public void add(T data) {
+        Node currentNode = head;
+        // 查找到最后一个节点，currentNode.next == null 说明下一个节点不存在，当前节点是最后一个节点
+        while (currentNode.next != null) {
+            currentNode = currentNode.next;
+        }
+        // 创建待添加的Node
+        currentNode.next = new Node<T>(data);
+    }
+```
+
+##### 反转
+
+###### 分析 (假定链表长度为4)
+
+1. 因为o1的next指针将断开与原链表的关联关系，因此需要通过临时next保存原链表的o2位置
+2. 反转之前head的next指向o1,而o1反转之后o1的next指向head的next（此时o1.next = head.next应当为null,但head.next != null ）所以用临时头部节点做反转操作。
+3. 反转之后原head节点的next节点没有做操作还依然指向o1,等到反转操作结束再重新赋值
+
+![](./imgs/第一次反转之前的逻辑图.png)
+
+​																					反转之前的逻辑图
+
+###### 第一次反转
+
+![](./\imgs\第一次反转之后的逻辑图.png)
+
+​														第一次反转之后的逻辑图
+
+
+
+###### 第二次反转
+
+1. 临时变量next记录执行第三次反转o3。
+2. 第二次反转将 o2.next 指向了 第一步结束后reverse.next也就是o1对象，这样 o2的下一个节点就是o1节点
+3. 将reverse(头节点)的next指向o2（第二次反转之后的第一个节点）。
+
+<img src="./imgs/第二次反转之后逻辑图.png" style="zoom:67%;" />
+
+​											第二次反转之后逻辑图
+
+
+
+###### 第三次反转
+
+1. 与第二次反转操作一致
+
+<img src="E:\WorsSpace\Data-structures-and-algorithms\imgs\第三次反转.png" style="zoom:67%;" />
+
+​														第三次反转之后逻辑图
+
+###### 第四次反转
+
+1. 此时临时next变量为null。
+
+<img src="E:\WorsSpace\Data-structures-and-algorithms\imgs\第四次反转.png" alt="1582534094338" style="zoom:67%;" />
+
+###### 反转结束
+
+1. 将临时头节点指向的o4赋值给原头节点head反转结束。
+
+<img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1582534271649.png" alt="1582534271649" style="zoom:67%;" />
+
+###### 全部代码
+
+```java
+public class SingleLinkedList<T> {
+    private Node<T> head = new Node<>();
+
+    public void add(T data) {
+        Node currentNode = head;
+        // 查找到最后一个节点，currentNode.next == null 说明下一个节点不存在，当前节点是最后一个节点
+        while (currentNode.next != null) {
+            currentNode = currentNode.next;
+        }
+        // 创建待添加的Node
+        currentNode.next = new Node<T>(data);
+    }
+
+    public void print() {
+        // head节点不包括在内
+        Node currentNode = head.next;
+        // 查找到最后一个节点.如果currentNode == null 说明节点不存在，循环结束
+        while (currentNode != null) {
+            System.out.print(currentNode.data);
+            currentNode = currentNode.next;
+        }
+    }
+
+    private void reverse() {
+        // 临时头节点：原几点因为next已经指向了第一个节点避免之后错误，要新建一个临时的节点
+        Node<T> reverseHead = new Node();
+        Node<T> current = head.next;
+        Node<T> nextNode = null;
+        // 如果为空或者只有一个节点不需要反转
+        if (head.next == null || head.next.next == null) {
+            return;
+        }
+        // 循环完节点
+        while (current != null) {
+            // 保存下一个节点的位置，因为当前节点的next的节点要重新赋值
+            nextNode = current.next;
+            // 当前节点的next 节点始终指向第一个节点
+            current.next = reverseHead.next;
+            // 将当前节点标记为第一个节点
+            reverseHead.next = current;
+            // 实现反转之后，重复进行下一个节点反转
+            current = nextNode;
+        }
+        //将reverseHead 赋值给原头节点
+        head = reverseHead;
+    }
+
+    // 节点数据
+    class Node<T> {
+        private T data;
+
+        private Node next;
+
+        public Node(T data) {
+            this.data = data;
+        }
+
+        public Node() {
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public void setData(T data) {
+            this.data = data;
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+    }
+
+    public static void main(String[] args) {
+        SingleLinkedList<Integer> singleLinkedList = new SingleLinkedList<>();
+        singleLinkedList.add(1);
+        singleLinkedList.add(1);
+        singleLinkedList.add(2);
+        singleLinkedList.add(2);
+        singleLinkedList.reverse();
+        singleLinkedList.print();
+    }
+}
+
+```
+
+###### 总结
+
+1. 遍历操作每个节点的next节点，导致当前节点与下一个节点之间的联系断开，需要一个临时的next保存下一个节点位置，以便下一次遍历。
+2. 需要新的head保存反转节点的头信息。
+3. 多画图容易加深理解
