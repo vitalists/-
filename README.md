@@ -653,3 +653,191 @@ public class SingleLinkedList<T> {
 1. 遍历操作每个节点的next节点，导致当前节点与下一个节点之间的联系断开，需要一个临时的next保存下一个节点位置，以便下一次遍历。
 2. 需要新的head保存反转节点的头信息。
 3. 多画图容易加深理解
+
+#### 3.3.2 双向链表
+
+##### 单链表的问题
+
+1. 单链表的查找方向只能是一个。
+2. 单向链表不能自我删除，需要辅助节点
+
+##### 双向链表
+
+1. 可以向前查找也可以向后查找
+2. 每个节点除了数据部分、next变量还有 pre变量（指向前一个节点）
+
+![1582623686565](E:\WorsSpace\Data-structures-and-algorithms\imgs\双向链表)
+
+双向链表比单向链表多一个pre变量。
+
+双向链表的Node节点代码：
+
+```java
+   class Node {
+        private Node next;
+
+        private Node pre;
+
+        private Integer data;
+
+        public Node(Node next, Node pre, Integer data) {
+            this.next = next;
+            this.pre = pre;
+            this.data = data;
+        }
+
+        private Node(Integer data) {
+            this.data = data;
+        }
+
+        public Node() {
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+
+        public Node getPre() {
+            return pre;
+        }
+
+        public void setPre(Node pre) {
+            this.pre = pre;
+        }
+
+        public Integer getData() {
+            return data;
+        }
+
+        public void setData(Integer data) {
+            this.data = data;
+        }
+    }
+```
+
+双向链表的增加删除方法和单链表类似
+
+```java
+public class DoubleLinkedList {
+    private Node head = new Node();
+
+    private Node rear;
+
+    //添加
+    public void add(Integer data) {
+        Node current = head;
+        //最后一个节点
+        while (current.next != null) {
+            current = current.next;
+        }
+        Node newNode = new Node(data);
+        current.next = newNode;
+        newNode.pre = current;
+        rear = newNode;
+    }
+
+    // 顺序打印
+    public void print() {
+        Node current = head.next;
+        while (current != null) {
+            System.out.println(current.data);
+            current = current.next;
+        }
+    }
+
+    // 逆序打印
+    public void reprint() {
+        Node current = rear;
+        while (current.pre != null) {
+            System.out.println(current.data);
+            current = current.pre;
+        }
+    }
+
+    private void del(Integer data) {
+        Node current = head.next;
+        while (current != null) {
+            // 需要删除的数据
+            if (current.data == data) {
+                //删除的是最后一个节点
+                if (current.next == null) {
+                    current.pre = null;
+                } else{
+                    Node pre = current.pre;
+                    Node next = current.next;
+                    pre.next = next;
+                    next.pre = pre;
+                }
+            }
+            current = current.next;
+        }
+    }
+    public static void main(String[] args) {
+        DoubleLinkedList doubleLinkedList = new DoubleLinkedList();
+        doubleLinkedList.add(1);
+        doubleLinkedList.add(2);
+        doubleLinkedList.add(3);
+        doubleLinkedList.add(4);
+        System.out.println("顺序打印");
+        doubleLinkedList.print();
+        System.out.println("逆序打印");
+        doubleLinkedList.reprint();
+        System.out.println("打印最后一个数");
+        System.out.println(doubleLinkedList.rear.data);
+        System.out.println("删除链表节点:3");
+        doubleLinkedList.del(3);
+        doubleLinkedList.print();
+    }
+
+    class Node {
+        private Node next;
+
+        private Node pre;
+
+        private Integer data;
+
+        public Node(Node next, Node pre, Integer data) {
+            this.next = next;
+            this.pre = pre;
+            this.data = data;
+        }
+
+        private Node(Integer data) {
+            this.data = data;
+        }
+
+        public Node() {
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+
+        public Node getPre() {
+            return pre;
+        }
+
+        public void setPre(Node pre) {
+            this.pre = pre;
+        }
+
+        public Integer getData() {
+            return data;
+        }
+
+        public void setData(Integer data) {
+            this.data = data;
+        }
+    }
+}
+
+```
+
